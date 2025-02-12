@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HOME -->
+<section class="section-hero overlay inner-page bg-image"
+  style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <h1 class="text-white font-weight-bold">Log In</h1>
+        <div class="custom-breadcrumbs">
+          <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+          <span class="text-white"><strong>Log In</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contain forms login-form">
+  <div class="form login">
+    <div class="form-content">
+      <!-- Add company icon here -->
+      <div class="company-icon">
+        <img src="{% static 'images/logojobmania.png' %}" alt="Company Logo">
+      </div>
+      <header>Login</header>
+      
+      <form method="POST" action="#">
+        {% csrf_token %}
+        
+        {% include 'messages.html' %}
+        
+        {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+          <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+          <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        {% for field in form %}
+        <div class="field input-field">
+          <label for="id_{{ field.name }}" class="sr-only">{{ field.label }}</label>
+          <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" 
+            id="id_{{ field.name }}" class="input" placeholder="{{ field.field.widget.attrs.placeholder }}">
+        </div>
+        {% endfor %}
+
+        <div class="form-link">
+          <a href="#" class="forgot-pass">Forgot password?</a>
+        </div>
+        <div class="field button-field">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+      
+      <div class="form-link">
+        <span>Don't have an account? <a href="{% url 'account:employee-registration' %}" class="link signup-link">Signup</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% endblock %}

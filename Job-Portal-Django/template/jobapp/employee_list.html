@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="section-hero overlay inner-page bg-image"
+    style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+</section>
+<section class="site-section">
+       <div class="container">
+        <h2 class="text-center my-4">Employee List</h2>
+        
+        <table class="table table-bordered table-striped text-center">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Interested Categories</th>
+                    <th>Check Profile</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ employee.first_name }} {{ employee.last_name }} </td>
+                    <td>{{ employee.email }}</td>
+                    <td> {% if employee.interested_categories.all %}
+                        {% for category in employee.interested_categories.all %}
+                            <span>{{ category.name }}</span>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No categories selected
+                    {% endif %} </td>
+                    <td>
+                        <a href="{% url 'jobapp:applicant-details' employee.id %}" class="btn btn-info btn-sm">View</a>
+                        
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No employees found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+{% endblock  %}

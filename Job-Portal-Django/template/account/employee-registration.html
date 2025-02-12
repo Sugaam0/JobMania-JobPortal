@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HOME -->
+<section class="section-hero overlay inner-page bg-image"
+  style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-white font-weight-bold">Employee/Sign Up</h1>
+        <div class="custom-breadcrumbs">
+          <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+          <span class="text-white"><strong>Sign Up</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contain forms signup-form">
+  <div class="form signup">
+    <div class="form-content">
+      <div class="company-icon">
+        <img src="{% static 'images/logojobmania.png' %}" alt="Company Logo">
+      </div>
+      <header>Employee Sign Up</header>
+      {% include 'messages.html' %}
+
+      {% if form.errors %}
+      <div class="error-messages">
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger alert-dismissable">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{ field.label|capfirst }} {{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger alert-dismissable">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+          {% if field.name == 'gender' %}
+          <div class="field gender-field">
+            <label class="text-black" for="id_{{ field.name }}">{{ field.label }}</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="male" value="M" {% if field.value == 'M' %}checked{% endif %}>
+              <label class="form-check-label" for="male">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="female" value="F" {% if field.value == 'F' %}checked{% endif %}>
+              <label class="form-check-label" for="female">Female</label>
+            </div>
+          </div>
+          {% elif field.name == 'interested_categories' %}
+          <div class="row form-group">
+            <div class="col-md-12 mt-5 mb-3 mb-md-0">
+              <label class="text-black" for="id_{{ field.name }}">{{ field.label }}</label>
+              {{ field }}
+            </div>
+          </div>
+          {% elif field.name == 'skills' %}
+          <div class="row form-group">
+            <div class="col-md-12 mb-3 mb-md-0">
+              <label class="text-black" for="id_{{ field.name }}">{{ field.label }}</label>
+              {{ field }}  <!-- This will display the skills field (Textarea) -->
+            </div>
+          </div>
+          {% else %}
+          <div class="field input-field">
+            <label for="id_{{ field.name }}">{{ field.label }}</label>
+            <input 
+              type="{{ field.field.widget.input_type }}" 
+              name="{{ field.name }}" 
+              id="id_{{ field.name }}" 
+              class="input"
+              placeholder="{{ field.field.widget.attrs.placeholder }}"
+              value="{{ field.value|default_if_none:'' }}">
+          </div>
+          {% endif %}
+        {% endfor %}
+        <div class="field button-field">
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

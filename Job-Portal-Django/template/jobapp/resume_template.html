@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="section-hero overlay inner-page bg-image"
+    style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+</section>
+<section class="site-section">
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: montserrat;
+    }
+
+    .container {
+        background-color: #f5f5f5;
+        max-width: 800px;
+        margin: 60px auto;
+        height: 1100px;
+        padding: 20px;
+        box-shadow: 10px 2em 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+        text-align: center;
+    }
+
+    .header h1 {
+        margin-bottom: 5px;
+    }
+
+    .header h3 {
+        text-transform: uppercase;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .main {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .left {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .left p {
+        line-height: 1;
+    }
+
+    .left ul li {
+        line-height: 1;
+
+    }
+
+    h2 {
+
+        padding: 5px;
+        color: #584d4d;
+        margin: 30px 0;
+        text-decoration: underline;
+
+        font-size: 25px;
+        border-radius: 0 20px 20px 0;
+    }
+
+    .right {
+        flex: 1;
+        padding: 20px;
+
+    }
+
+    .right h3 {
+        margin-bottom: 5px;
+
+    }
+
+    .right ul li {
+        line-height: 1;
+    }
+
+    .btn1 {
+        margin-left: 43%;
+        padding: 15px 15px;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: rgb(106, 233, 106);
+        border-radius: 10px;
+    }
+</style>
+
+<body>
+    <h1 style="text-align: center; color:green; font-size:40px; ">Here is your Resume!! </h1>
+    <div id="mn" class="container">
+        <div class="header">
+            <br><br>
+            <h1>{{name}}</h1>
+            <h3>{{about}}</h3>
+        </div>
+        <div class="main">
+            <div class="left">
+                <h2>Personal Information</h2>
+                <p><strong>Name :</strong>{{name}}</p>
+                <p><strong>Age :</strong>{{age}} </p>
+                <p><strong>Email</strong> {{email}}</p>
+                <p><strong>Phone</strong> +91-{{phone}}</p>
+                <h2>Skills</h2>
+                <ul>
+                    <li>{{skill1}}</li>
+                    <li>{{skill2}}</li>
+                    <li>{{skill3}}</li>
+                    <li>{{skill4}}</li>
+                    <li>{{skill5}}</li>
+                </ul>
+                <h2>Education</h2>
+                <h3>{{degree1}} </h3>
+                <p>{{college1}}</p>
+                <p>{{year1}}</p>
+                <br>
+                <h3>{{degree2}} </h3>
+                <p>{{college2}}</p>
+                <p> Year : {{year2}}</p>
+                <h3>{{degre3}} </h3>
+                <p>{{college3}}</p>
+                <p> Year : {{year3}}</p>
+                <h2>Languages</h2>
+                <ul>
+                    <li>{{lang1}}</li>
+                    <li>{{lang2}}</li>
+                    <li>{{lang3}}</li>
+                </ul>
+            </div>
+            <div class="right">
+                <h2>Projects</h2>
+                <h3>{{project1}}</h3>
+                <p><strong>Duration :</strong> {{durat1}}</p>
+                <ul>
+                    <li>{{desc1}}</li>
+                </ul>
+                <br>
+                <h3>{{project2}}</h3>
+                <p><strong>Duration :</strong> {{durat2}}</p>
+                <ul>
+                    <li>{{desc2}}</li>
+                </ul>
+                <h2>Work Experinece</h2>
+                <h3>{{company1}}</h3>
+                <p><strong>Position:</strong> {{post1}}</p>
+                <p><strong>Duration :</strong> {{duration1}}</p>
+                <ul>
+                    <li>{{lin11}}</li>
+                </ul>
+                <br><br>
+                <h3>{{company2}}</h3>
+                <p><strong>Position: </strong>{{post2}}</p>
+                <p><strong>Duration</strong> {{duration2}}</p>
+                <ul>
+                    <li>{{lin21}}</li>
+                </ul>
+                <h2>Achievements :</h2>
+                <ul>
+                    <li>{{ach1}}</li>
+                    <li>{{ach2}}</li>
+                    <li>{{ach3}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <button onclick="generateImage('mn')" type="button" class="btn1">Download Image</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="text/javascript">
+    function generateImage(containerId) {
+        const container = document.getElementById(containerId);
+
+        // Convert HTML content to an image
+        html2canvas(container, {
+            scale: 2, // Increase for higher resolution
+        }).then((canvas) => {
+            // Convert the canvas to an image (JPEG)
+            const image = canvas.toDataURL('image/jpeg', 1.0);
+
+            // Create a temporary download link and trigger download
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'resume.jpg';
+            link.click();
+        });
+    }
+</script>
+
+</section>
+{% endblock  %}

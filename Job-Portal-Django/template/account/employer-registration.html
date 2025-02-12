@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HOME -->
+<section class="section-hero overlay inner-page bg-image"
+  style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-white font-weight-bold">Employer/Sign Up</h1>
+        <div class="custom-breadcrumbs">
+          <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+          <span class="text-white"><strong>Sign Up</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="contain forms signup-form custom-signup-container">
+  <div class="form signup">
+    <div class="form-content">
+
+      <!-- Company Logo -->
+      <div class="company-icon">
+        <img src="{% static 'images/logojobmania.png' %}" alt="Company Logo">
+      </div>
+
+      <!-- Header -->
+      <header>Sign Up to JobMania</header>
+
+      <!-- Django Messages -->
+      {% include 'messages.html' %}
+
+      <!-- Error Messages -->
+      {% if form.errors %}
+      <div class="error-messages">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <div class="alert alert-danger alert-dismissable">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>{{ field.label|capfirst }} {{ error|escape }}</strong>
+            </div>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <div class="alert alert-danger alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{ error|escape }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Signup Form -->
+      <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Company Name (mapped to first_name) -->
+        <div class="field input-field">
+          <label for="id_first_name">{{ form.first_name.label }}</label>
+          <input 
+            type="{{ form.first_name.field.widget.input_type }}" 
+            name="first_name" 
+            id="id_first_name" 
+            class="input"
+            placeholder="{{ form.first_name.widget.attrs.placeholder }}" 
+            >
+        </div>
+
+        <!-- Company Address (mapped to last_name) -->
+        <div class="field input-field">
+          <label for="id_last_name">{{ form.last_name.label }}</label>
+          <input 
+            type="{{ form.last_name.field.widget.input_type }}" 
+            name="last_name" 
+            id="id_last_name" 
+            class="input" 
+            >
+        </div>
+
+        <!-- Email -->
+        <div class="field input-field">
+          <label for="id_email">{{ form.email.label }}</label>
+          <input 
+            type="{{ form.email.field.widget.input_type }}" 
+            name="email" 
+            id="id_email" 
+            class="input"
+            placeholder="{{ form.email.widget.attrs.placeholder }}" 
+            value="{{ form.email.value|default:'' }}">
+        </div>
+
+        <!-- Password -->
+        <div class="field input-field">
+          <label for="id_password1">{{ form.password1.label }}</label>
+          <input 
+            type="password" 
+            name="password1" 
+            id="id_password1" 
+            class="input"
+            placeholder="{{ form.password1.widget.attrs.placeholder }}" 
+            >
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="field input-field">
+          <label for="id_password2">{{ form.password2.label }}</label>
+          <input 
+            type="password" 
+            name="password2" 
+            id="id_password2" 
+            class="input"
+            placeholder="{{ form.password2.widget.attrs.placeholder }}" 
+           >
+        </div>
+
+        <!-- Sign Up Button -->
+        <div class="field button-field">
+          <button type="submit" class="btn px-4 btn-primary text-white">Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
