@@ -23,7 +23,7 @@
     <div class="row">
       <div class="col-lg-12 mb-5">
 
-        <h2 class="mb-4 text-center">Update Profile</h2>
+       
         {% include 'messages.html' %}
 
         {% if form.errors %}
@@ -42,10 +42,33 @@
         </div>
         {% endfor %}
         {% endif %}
-
+        
 
         <form method="POST" class="p-4 border rounded" enctype="multipart/form-data">
           {% csrf_token %}
+          {% if form.instance.image_verified %}
+          <div class="form-group text-center mb-4">
+            <img src="{{ form.instance.profile_image.url }}" 
+                 alt="Profile Image" 
+                 width="200" 
+                 height="200" 
+                 id="profileImage" 
+                 style="cursor: pointer;" 
+                 data-toggle="modal" 
+                 data-target="#profileImageModal">
+          </div>
+          {% else %}
+          <img src="{% static 'images/default-image.jpg' %}" 
+          alt="Default Profile Image" 
+          width="100" 
+          height="100" 
+          id="profileImage" 
+          style="cursor: pointer;" 
+          data-toggle="modal" 
+          data-target="#profileImageModal">
+   </div>
+          {% endif %}
+
           {% for field in form %}
           {% if field.name == 'gender' %}
           <div class="row form-group mb-4">
@@ -62,6 +85,13 @@
               </div>
             </div>
           </div>
+
+          {% elif field.name == 'profile_image' %}
+          <!-- Hidden profile image field to allow updating it -->
+          <div class="form-group">
+            <label class="text-black" for="id_{{ field.name }}">{{ field.label }}</label>
+            <input type="file" class="form-control" name="{{ field.name }}" id="id_{{ field.name }}">
+          </div>
           
           {% elif field.name == 'resume' %}
           <div class="row form-group">
@@ -73,6 +103,8 @@
               {% endif %}
             </div>
           </div>
+
+         
 
           {% else %}
 
@@ -98,5 +130,21 @@
     </div>
   </div>
 </section>
+<div class="modal fade" id="profileImageModal" tabindex="-1" role="dialog" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img id="modalProfileImage" src="" class="img-fluid" alt="Profile Image">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('profileImage').addEventListener('click', function() {
+    var modalImage = document.getElementById('modalProfileImage');
+    modalImage.src = this.src;
+  });
+</script>
 
 {% endblock %}

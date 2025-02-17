@@ -1,68 +1,140 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
 {% block content %}
 
-
-
-    <!-- HOME -->
-    <section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-7">
-            <h1 class="text-white font-weight-bold">{{ applicant.get_full_name }}</h1>
-            <div class="custom-breadcrumbs">
-              <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
-              <span class="text-white"><strong>Applicant</strong></span>
-            </div>
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7 d-flex align-items-center">
+        <!-- Profile Image -->
+        <div class="profile-image mr-4">
+          {% if applicant.profile_image %}
+            <img src="{{ applicant.profile_image.url }}" alt="Profile Image" class="img-fluid rounded-circle" width="120" height="120" data-toggle="modal" data-target="#imageModal">
+          {% else %}
+            <img src="{% static 'images/default-profile.jpg' %}" alt="No Profile Image" class="img-fluid rounded-circle" width="120" height="120" data-toggle="modal" data-target="#imageModal">
+          {% endif %}
+        </div>
+        <!-- Applicant's Name -->
+        <div>
+          <h1 class="text-white font-weight-bold">{{ applicant.get_full_name }}</h1>
+          <div class="custom-breadcrumbs">
+            <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+            <span class="text-white"><strong>Applicant</strong></span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="site-section block__18514" id="next-section">
-      <div class="container">
-        <div class="row">
-          <!-- Skills Column -->
-          <div class="col-lg-4 mb-4">
-            <div class="border p-4 rounded">
-              <ul class="list-unstyled block__47528 mb-0">
-                <li><span class="active">Skills</span></li>
-                {% if applicant.skills %}
-                  <ul>
-                    {% for skill in applicant.get_skills_list %}
-                      <li>{{ skill }}</li>
-                    {% endfor %}
-                  </ul>
-                {% else %}
-                  <p>No skills added yet.</p>
-                {% endif %}
+<!-- Modal for Profile Image -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Display the large profile image -->
+        {% if applicant.profile_image %}
+          <img src="{{ applicant.profile_image.url }}" alt="Profile Image" class="img-fluid">
+        {% else %}
+          <img src="{% static 'images/default-profile.jpg' %}" alt="No Profile Image" class="img-fluid">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Resume Image -->
+<div class="modal fade" id="resumeModal" tabindex="-1" role="dialog" aria-labelledby="resumeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Display the large resume image -->
+        {% if applicant.resume %}
+          <img src="{{ applicant.resume.url }}" alt="Resume Image" class="img-fluid">
+        {% else %}
+          <span>No Resume Uploaded</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="site-section block__18514" id="next-section">
+  <div class="container">
+    <div class="row">
+      <!-- Skills Column -->
+      <div class="col-lg-4 mb-4">
+        <div class="border p-4 rounded">
+          <ul class="list-unstyled block__47528 mb-0">
+            <li><span class="active">Skills</span></li>
+            {% if applicant.skills %}
+              <ul>
+                {% for skill in applicant.get_skills_list %}
+                  <li>{{ skill }}</li>
+                {% endfor %}
               </ul>
-            </div>
-          </div>
-          <div class="col-lg-8">
-            <span class="text-primary d-block mb-5"><span class="icon-magnet display-1"></span></span>
-            <h2 class="mb-4">{{ applicant.get_full_name }}</h2>
-            <p><h3>Email :</h3>{{ applicant.email }}</p>
-            <p><h3>Gender :</h3>
-                {% if applicant.gender == 'M' %}
-                    Male
-                {% else %}
-                    Female
-                {% endif %}
-            </p>
-            <p><h3>Resume:</h3>
-              {% if applicant.resume %}
-                  <img src="{{ applicant.resume.url }}" alt="Resume Image" class="img-fluid" style="max-width: 100%; height: auto;">
-              {% else %}
-                  <span>No Resume Uploaded</span>
-              {% endif %}
-          </p>
-            <p><a href="mailto:{{ applicant.email }}" class="btn btn-primary btn-md mt-4">Contact</a></p>
-          </div>
+            {% else %}
+              <p>No skills added yet.</p>
+            {% endif %}
+          </ul>
         </div>
       </div>
-    </section>
-    
-
+      
+      <!-- Personal Info Section -->
+      <div class="col-lg-8">
+        <span class="text-primary d-block mb-5"><span class="icon-magnet display-1"></span></span>
+        <h2 class="mb-4">{{ applicant.get_full_name }}</h2>
+        
+        <!-- Basic Info -->
+        <div class="row">
+          <div class="col-md-6">
+            <p><h3>Email:</h3>{{ applicant.email }}</p>
+            <p><h3>Gender:</h3>
+              {% if applicant.gender == 'M' %}
+                Male
+              {% else %}
+                Female
+              {% endif %}
+            </p>
+          </div>
+          
+          <!-- About Me Section (on the right side) -->
+          <div class="col-md-6">
+            <div class="border p-4 rounded">
+              <h3>About Me : </h3>
+              {% if applicant.about_me %}
+                <p class="text-justify">{{ applicant.about_me }}</p>
+              {% else %}
+                <p>No information provided.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        
+        <p><h3>Resume:</h3>
+          {% if applicant.resume %}
+            <!-- Wrap the resume image with a link that triggers the modal -->
+            <a href="#" data-toggle="modal" data-target="#resumeModal">
+              <img src="{{ applicant.resume.url }}" alt="Resume Image" class="img-fluid" style="max-width: 60%; height: auto;">
+            </a>
+          {% else %}
+            <span>No Resume Uploaded</span>
+          {% endif %}
+        </p>
+        <p><a href="mailto:{{ applicant.email }}" class="btn btn-primary btn-md mt-4">Contact</a></p>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% endblock %}

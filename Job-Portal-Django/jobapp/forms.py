@@ -6,7 +6,8 @@ from django.contrib import auth
 from jobapp.models import *
 from ckeditor.widgets import CKEditorWidget
 
-    
+
+   
 
 class JobForm(forms.ModelForm):
     
@@ -59,6 +60,7 @@ class JobForm(forms.ModelForm):
                 'placeholder': 'https://example.com',
             }
         )    
+        
 
 
     class Meta:
@@ -104,8 +106,6 @@ class JobForm(forms.ModelForm):
             
             job.save()
         return job
-
-
 
 
 class JobApplyForm(forms.ModelForm):
@@ -217,3 +217,7 @@ class JobEditForm(forms.ModelForm):
         return job
 
 
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = ['title', 'content']

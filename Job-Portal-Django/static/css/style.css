@@ -36,7 +36,7 @@ section.contain.forms.login-form {
 
 
 section.contain.forms.signup-form {
-  height: 200vh; /* Suitable for signup */
+  height: 250vh; /* Suitable for signup */
 }
 
 section.contain.forms.signup-form.custom-signup-container {

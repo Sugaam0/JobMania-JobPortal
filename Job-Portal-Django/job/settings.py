@@ -41,12 +41,13 @@ INSTALLED_APPS = [
 
     'jobapp.apps.JobappConfig',
     'account.apps.AccountConfig',
-
-    #3rd Party App
+   
+    #3rd Party Apps
     'taggit',
     'ckeditor',
     'user_visit',
     'debug_toolbar',
+    
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'job.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -95,6 +95,8 @@ WSGI_APPLICATION = 'job.wsgi.application'
 #     }
 # }
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -105,8 +107,12 @@ DATABASES = {
         'PORT': '5432',  # Default PostgreSQL port
     }
 }
-
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sugam98240@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'vjcelwcrzgligozs'  # Your actual Gmail password
 #for debug toolbar
 INTERNAL_IPS = [
     # ...

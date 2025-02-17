@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');"
+    id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">{{ blog.title }}</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="{% url 'jobapp:dashboard' %}">Dashboard</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>{{ blog.title }}</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="blog-detail" style="background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                    <h2 class="text-center mb-4" style="font-size: 2rem; font-weight: bold;">{{ blog.title }}</h2>
+                    <p class="text-center" style="font-style: italic; color: #555; font-size: 1rem; margin-bottom: 15px;">by {{ blog.author.first_name }} on {{ blog.created_at|date:"F j, Y" }}</p>
+                    <div class="content">
+                        <p style="color: #777; font-size: 1.1rem; line-height: 1.8;">{{ blog.content }}</p>
+                    </div>
+                    <!-- Back to Blog List Button -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'jobapp:blog-list' %}" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff; padding: 12px 20px; font-size: 1rem; border-radius: 5px; text-decoration: none; transition: all 0.3s ease;">
+                            Back to Blog List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .btn:hover {
+        background-color:rgb(11, 138, 170); /* Darker blue */
+        border-color:rgb(18, 154, 212);
+        transform: scale(1.05); /* Slightly enlarge the button on hover */
+    }
+
+</style>
+{% endblock %}

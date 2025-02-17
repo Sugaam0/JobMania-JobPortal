@@ -32,7 +32,10 @@ class User(AbstractUser):
         related_name='users'
     )
     skills = models.TextField(blank=True, null=True)
-
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True, default='default-image.jpg')
+    image_verified = models.BooleanField(default=False)
+    about_me = models.TextField(blank=True, null=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 

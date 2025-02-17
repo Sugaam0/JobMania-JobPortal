@@ -19,7 +19,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+  
 
 class Job(models.Model):
 
@@ -67,3 +67,16 @@ class BookmarkJob(models.Model):
 
     def __str__(self):
         return self.job.title
+    
+# New Blog model to allow employers to create blogs
+class Blog(models.Model):
+    title = models.CharField(max_length=200)
+    content = RichTextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blogs')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog-list')

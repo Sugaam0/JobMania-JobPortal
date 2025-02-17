@@ -5,45 +5,71 @@
     style="background-image: url('{% static 'images/hero_1.jpg' %}');" id="home-section">
 </section>
 <section class="site-section">
-       <div class="container">
-        <h2 class="text-center my-4">Employee List</h2>
-        
-        <table class="table table-bordered table-striped text-center">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Interested Categories</th>
-                    <th>Check Profile</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for employee in employees %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ employee.first_name }} {{ employee.last_name }} </td>
-                    <td>{{ employee.email }}</td>
-                    <td> {% if employee.interested_categories.all %}
-                        {% for category in employee.interested_categories.all %}
-                            <span>{{ category.name }}</span>{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        No categories selected
-                    {% endif %} </td>
-                    <td>
-                        <a href="{% url 'jobapp:applicant-details' employee.id %}" class="btn btn-info btn-sm">View</a>
-                        
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5">No employees found.</td>
-                </tr>
+  <div class="container">
+    <h2 class="text-center my-4">Employee List</h2>
+    
+    <div class="row">
+      {% for employee in employees %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm" style="border-radius: 20px;">
+          <div class="card-body text-center">
+            <!-- Profile Image (Small and Rounded) -->
+            <img src="{{ employee.profile_image.url }}" 
+                 alt="Employee Photo" 
+                 class="rounded-circle mb-3" 
+                 width="100" 
+                 height="100">
+            
+            <!-- Employee Name -->
+            <h5 class="card-title font-weight-bold">{{ employee.first_name }} {{ employee.last_name }}</h5>
+
+            <!-- Email -->
+            <p class="text-muted mb-2">{{ employee.email }}</p>
+
+            <!-- Interested Categories -->
+            <p class="mb-3">
+              <strong>Categories:</strong>
+              {% if employee.interested_categories.all %}
+                {% for category in employee.interested_categories.all %}
+                  <span>{{ category.name }}</span>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
-            </tbody>
-        </table>
+              {% else %}
+                No categories selected
+              {% endif %}
+            </p>
+
+            <!-- View Profile Button -->
+            <a href="{% url 'jobapp:applicant-details' employee.id %}" 
+            class="btn btn-info btn-sm px-4 py-2 font-weight-bold text-white"
+            style="border-radius: 20px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); transition: all 0.3s;">
+            View Profile
+         </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
 
+    <!-- Empty State -->
+    {% if employees|length == 0 %}
+    <div class="text-center">
+      <p>No employees found.</p>
+    </div>
+    {% endif %}
+  </div>
 </section>
-{% endblock  %}
+
+<style>
+    /* Add a hover effect to the View Profile button */
+    a.btn:hover {
+      background-color:rgb(23, 170, 210); /* Darker blue on hover */
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2); /* Slightly deeper shadow */
+      transform: translateY(-2px); /* Slight lift effect */
+    }
+</style>
+
+<!-- Include Bootstrap JS if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+{% endblock %}

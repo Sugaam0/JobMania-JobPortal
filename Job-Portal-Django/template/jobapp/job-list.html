@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% block content %}
 
+{% block content %}
 
 <!-- HOME -->
 <section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');"
@@ -19,49 +19,65 @@
   </div>
 </section>
 
-
-<section class="site-section services-section bg-light block__62849" id="next-section">
+<!-- Filter Section -->
+<section class="site-section services-section bg-light block__62849" id="filter-section">
   <div class="container">
-
     <div class="row">
-      {% if page_obj.paginator.count > 0 %}
-      {% for job in page_obj %}
-      <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-        <a href="{% url 'jobapp:single-job' job.id %}" class="block__16443 min-h text-center d-block">
-          <span class="custom-icon mx-auto"><span class="icon-magnet d-block"></span></span>
-          <h3>{{ job.title }}</h3>
-          <ul class="job-listing-meta list-unstyled pl-3 mb-0">
-            <li class="menu-fix mb-2">
-              {% if job.job_type == '1' %}
-              <span class="badge badge-primary">
-                Full Time
-              </span>
-              {% elif job.job_type == '2'%}
-              <span class="badge badge-danger">
-                Part Time
-              </span>
-              {% else  %}
-              <span class="badge badge-info">
-                Internship
-              </span>
-              {% endif %}</li>
-            <li class="badge badge-secondary menu-fix mb-2"> {{ job.location }}</li>
-          </ul>
-          <p>{{ job.description | safe | truncatechars:100}}</p>
-        </a>
+      <!-- Sidebar with Filters -->
+      <div class="col-md-3">
+        <div class="filter-box p-4 border rounded">
+          <h4>Filter by Category</h4>
+          <form method="get" action="{% url 'jobapp:job-list' %}">
+            <div class="form-check mb-3">
+              {% for category in categories %}
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" name="categories" value="{{ category.id }}"
+                         {% if category.id|stringformat:"s" in selected_categories %} checked {% endif %}>
+                  <label class="form-check-label">{{ category.name }}</label>
+                </div>
+              {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Apply Filter</button>
+          </form>
+        </div>
       </div>
-      {% endfor %}
-      {% else %}
-      <div class="col-12 text-center">
-        <h3>Currently, No jobs are available.</h3>
+
+      <!-- Job Listings -->
+      <div class="col-md-9">
+        <div class="row">
+          {% if page_obj.paginator.count > 0 %}
+            {% for job in page_obj %}
+            <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
+              <a href="{% url 'jobapp:single-job' job.id %}" class="block__16443 min-h text-center d-block">
+                <span class="custom-icon mx-auto"><span class="icon-magnet d-block"></span></span>
+                <h3>{{ job.title }}</h3>
+                <ul class="job-listing-meta list-unstyled pl-3 mb-0">
+                  <li class="menu-fix mb-2">
+                    {% if job.job_type == '1' %}
+                    <span class="badge badge-primary">Full Time</span>
+                    {% elif job.job_type == '2'%}
+                    <span class="badge badge-danger">Part Time</span>
+                    {% else %} 
+                    <span class="badge badge-info">Internship</span>
+                    {% endif %}
+                  </li>
+                  <li class="badge badge-secondary menu-fix mb-2">{{ job.location }}</li>
+                </ul>
+                <p>{{ job.description | safe | truncatechars:100}}</p>
+              </a>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="col-12 text-center">
+              <h3>Currently, No jobs are available.</h3>
+            </div>
+          {% endif %}
+        </div>
+        {% include 'jobapp/paginator.html' %}
       </div>
-    {% endif %}
     </div>
-
-    
-    {% include 'jobapp/paginator.html' %}
-
   </div>
 </section>
+
 
 {% endblock content %}

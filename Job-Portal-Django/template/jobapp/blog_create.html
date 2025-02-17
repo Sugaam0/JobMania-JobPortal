@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('{% static 'images/hero_1.jpg' %}');"
+    id="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h1 class="text-white font-weight-bold">Create Blog</h1>
+                <div class="custom-breadcrumbs">
+                    <a href="{% url 'jobapp:home' %}">Home</a> <span class="mx-2 slash">/</span>
+                    <a href="{% url 'jobapp:dashboard' %}">Dashboard</a> <span class="mx-2 slash">/</span>
+                    <span class="text-white"><strong>Create Blog</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card" style="border: 1px solid #ddd; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: #fff; height: 500px;">
+                    <h2 class="text-center mb-4" style="font-size: 1.8rem; font-weight: bold; color: #333;">Create Your Blog</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title" style="font-weight: bold; color: #555;">Blog Title</label>
+                            <input type="text" name="title" class="form-control" id="id_title" value="{{ form.title.value }}" placeholder="Enter Blog Title" style="height: 45px; font-size: 1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="content" style="font-weight: bold; color: #555;">Blog Content</label>
+                            <textarea name="content" class="form-control" id="id_content" placeholder="Write your blog content here" rows="8" style="font-size: 1rem;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" style="background-color: #007bff; border-color: #007bff; padding: 14px; font-size: 1.2rem; border-radius: 5px; transition: background-color 0.3s ease; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <strong>Create Blog</strong>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

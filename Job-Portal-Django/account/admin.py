@@ -4,14 +4,12 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import User
-from jobapp.models import Category 
-
+from jobapp.models import Category
 
 class AddUserForm(forms.ModelForm):
     """
     New User Form. Requires password confirmation.
     """
-    
     skills = forms.CharField(
         widget=forms.Textarea(attrs={'placeholder': 'Enter skills separated by commas.'}),
         required=False,
@@ -23,6 +21,12 @@ class AddUserForm(forms.ModelForm):
         required=False,
         label="Interested Categories"
     )
+    profile_image = forms.ImageField(required=False, label="Profile Image")
+    about_me = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Write something about yourself.'}),
+        required=False,
+        label="About Me"
+    )
     password1 = forms.CharField(
         label='Password', widget=forms.PasswordInput
     )
@@ -32,7 +36,7 @@ class AddUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'gender', 'role', 'resume', 'interested_categories', 'skills')
+        fields = ('email', 'first_name', 'last_name', 'gender', 'role', 'resume', 'interested_categories', 'skills', 'profile_image', 'about_me')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -57,6 +61,7 @@ class AddUserForm(forms.ModelForm):
         skills = self.cleaned_data.get('skills')
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
+        user.about_me = self.cleaned_data.get('about_me')  # Save the "About Me" field
         if commit:
             user.save()
         if skills:
@@ -79,14 +84,19 @@ class UpdateUserForm(forms.ModelForm):
         required=False,
         label="Skills"
     )
+    profile_image = forms.ImageField(required=False, label="Profile Image")
+    about_me = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Write something about yourself.'}),
+        required=False,
+        label="About Me"
+    )
     password = ReadOnlyPasswordHashField()
-
 
     class Meta:
         model = User
         fields = (
             'email', 'password', 'first_name', 'last_name', 'gender', 'role', 'resume',
-            'interested_categories', 'skills' , 'is_active', 'is_staff'
+            'interested_categories', 'skills', 'profile_image', 'about_me', 'image_verified', 'is_active', 'is_staff'
         )
 
     def clean_password(self):
@@ -98,11 +108,11 @@ class UserAdmin(BaseUserAdmin):
     form = UpdateUserForm
     add_form = AddUserForm
 
-    list_display = ('email', 'first_name', 'last_name', 'gender', 'role', 'resume', 'skills', 'is_staff')
-    list_filter = ('is_staff', )
+    list_display = ('email', 'first_name', 'last_name', 'gender', 'role', 'is_staff')
+    list_filter = ('is_staff', 'image_verified')  # Add image_verified to the list filter
     fieldsets = (
         (None, {'fields': ('email', 'password')}), 
-        ('Personal info', {'fields': ('first_name', 'last_name', 'gender', 'role', 'resume', 'interested_categories', 'skills')}), 
+        ('Personal info', {'fields': ('first_name', 'last_name', 'gender', 'role', 'resume', 'interested_categories', 'skills', 'profile_image', 'about_me', 'image_verified')}), 
         ('Permissions', {'fields': ('is_active', 'is_staff')}), 
     )
     add_fieldsets = (
@@ -112,7 +122,7 @@ class UserAdmin(BaseUserAdmin):
                 'classes': ('wide',),
                 'fields': (
                     'email', 'first_name', 'last_name', 'gender', 'role', 'resume',
-                     'interested_categories', 'sKills', 'password1', 'password2'
+                    'interested_categories', 'skills', 'profile_image', 'about_me', 'password1', 'password2'
                 )
             }
         ),
@@ -120,8 +130,10 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email', 'first_name', 'last_name')
 
-
-
-
+    def save_model(self, request, obj, form, change):
+        # If the image is not verified, set the default image
+        if not obj.image_verified:
+            obj.profile_image = 'default-image.jpg'  # Set your default image path here
+        super().save_model(request, obj, form, change)
 
 admin.site.register(User, UserAdmin)

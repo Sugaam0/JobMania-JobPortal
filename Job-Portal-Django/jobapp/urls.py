@@ -24,4 +24,8 @@ urlpatterns = [
     path('dashboard/employee/delete-bookmark/<int:id>/', views.delete_bookmark_view, name='delete-bookmark'),
     path('resume/', views.resume, name = 'resume'),
     path('employees/', views.employee_list, name='employees'),
+    path('blogs/', views.blog_list_view, name='blog-list'),  # To display all blogs
+    path('blog/create/', views.create_blog_view, name='create-blog'),
+    path('blog/<int:blog_id>/', views.blog_single_view, name='blog-single'),
+    
 ]

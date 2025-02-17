@@ -19,7 +19,9 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 from django.http import HttpResponse
 import base64
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from account.models import User
 
 
 def home_view(request):
@@ -69,21 +71,35 @@ def home_view(request):
     print('ok')
     return render(request, 'jobapp/index.html', context)
 
-def job_list_View(request):
-    """
 
-    """
-    job_list = Job.objects.filter(is_published=True,is_closed=False).order_by('-timestamp')
+
+def job_list_View(request):
+    # Fetch all categories for the filter
+    categories = Category.objects.all()
+
+    # Start with filtering jobs that are published and not closed
+    job_list = Job.objects.filter(is_published=True, is_closed=False).order_by('-timestamp')
+
+    # Get selected categories from the request GET parameters
+    selected_categories = request.GET.getlist('categories')  # list of selected category IDs
+    if selected_categories:
+        # Filter the job list based on selected categories
+        job_list = job_list.filter(category__id__in=selected_categories)
+
+    # Paginate the filtered job list
     paginator = Paginator(job_list, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Pass the filtered job list and categories to the context
     context = {
-
         'page_obj': page_obj,
-        
+        'categories': categories,  # To render category filters in the template
+        'selected_categories': selected_categories,  # Pass the selected categories
     }
+
     return render(request, 'jobapp/job-list.html', context)
+
 
 
 @login_required(login_url=reverse_lazy('account:login'))
@@ -106,6 +122,7 @@ def create_job_View(request):
             instance.save()
             # for save tags
             form.save_m2m()
+                   
             messages.success(
                     request, 'You have successfully posted your job! Please wait for review.')
             return redirect(reverse("jobapp:single-job", kwargs={
@@ -197,7 +214,6 @@ def search_result_view(request):
 def apply_job_view(request, id):
 
     form = JobApplyForm(request.POST or None)
-
     user = get_object_or_404(User, id=request.user.id)
     applicant = Applicant.objects.filter(user=user, job=id)
 
@@ -208,6 +224,23 @@ def apply_job_view(request, id):
                 instance = form.save(commit=False)
                 instance.user = user
                 instance.save()
+                
+                job = get_object_or_404(Job, id=id)
+                employer_email = job.user.email
+                
+                subject = f"New Job Application: {user.get_full_name()} applied for {job.title}"
+                message = f"Dear {job.user.get_full_name()},\n\n" \
+                          f"{user.get_full_name()} has applied for your job posting: {job.title}.\n\n" \
+                          f"Please log in to the portal to view the application details."
+                
+                # Send the email
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=user.email,  # The email of the employee applying for the job
+                    recipient_list=[employer_email],
+                    fail_silently=False,
+                )
 
                 messages.success(
                     request, 'You have successfully applied for this job!')
@@ -461,9 +494,9 @@ def resume(request):
     
     return render(request, 'jobapp/create_resume.html')
 
-
 def employee_list(request):
     # Fetch all users with the role of 'employee'
+    category_id = request.GET.getlist('categories')
     employees = User.objects.filter(role='employee')
 
     # If you want filtering based on categories, you can add it here
@@ -472,9 +505,38 @@ def employee_list(request):
         employees = employees.filter(interested_categories__name=category_filter)
 
     # You can also add other filters, such as by location, skills, etc.
-    
+    categories = Category.objects.all()
     context = {
-        'employees': employees
+        'employees': employees,
+        'categories': categories,
+        'selected_categories': category_id,
     }
     
     return render(request, 'jobapp/employee_list.html', context)
+
+def blog_list_view(request):
+    blogs = Blog.objects.all()
+    return render(request, 'jobapp/blog_list.html', {'blogs': blogs})
+
+@login_required(login_url=reverse_lazy('account:login'))
+@user_is_employer
+def create_blog_view(request):
+    if request.method == 'POST':
+        form = BlogForm(request.POST)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            blog.author = request.user  # Assign logged-in user as the author
+            blog.save()
+            return redirect('jobapp:blog-list')  # Redirect to the blog list page
+    else:
+        form = BlogForm()
+    return render(request, 'jobapp/blog_create.html', {'form': form})
+
+def blog_single_view(request, blog_id):
+    # Retrieve the blog object based on its ID
+    blog = get_object_or_404(Blog, id=blog_id)
+    
+    # Render the blog details in the blog_single.html template
+    return render(request, 'jobapp/blog_single.html', {'blog': blog})
+
+
