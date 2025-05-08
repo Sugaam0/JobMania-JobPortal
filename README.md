@@ -1,12 +1,3 @@
-# Lost & Found Board
-
-A web application where users can post and claim lost and found items.
-
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
