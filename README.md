@@ -1,20 +1,34 @@
-Job Portal
-A full-stack Job Portal web application where job seekers can register, search, and apply for jobs,
-while recruiters can post job listings and manage applications. Built using Django for the backend
-and Html, css, and javascript for the frontend.
+# Lost & Found Board
 
-1. Clone the repository:
-   https://github.com/Sugaam0/JobMania-JobPortal
+A web application where users can post and claim lost and found items.
 
-2. Create a virtual environment
-  python -m venv venv
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-3. Install the requirements.txt file
-     pip install -r requirements.txt
+## Installation
 
-4. Migrate
-     py manage.py makemigrations
-     py manage.py migrate
+Clone the repository:
 
-5. Run server
-     py manage.py runserver
+```bash
+git clone https://github.com/Sugaam0/JobMania-JobPortal
+
+````
+Install Dependencies: (remove versions from requirements.txt) is any error occurs)
+
+````bash
+pip install -r requirements.txt
+````
+Setup email in settings.py write your own email and app password
+
+Migrate the database
+```bash
+py manage.py makemigrations
+py manage.py migrate
+```
+Run the server
+```
+py manage.py runserver
+
