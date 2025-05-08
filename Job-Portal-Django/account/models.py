@@ -59,5 +59,13 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
         
     objects = CustomUserManager()
+
+
+class accountType(models.Model):
+    type = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.type
+        
     
     
