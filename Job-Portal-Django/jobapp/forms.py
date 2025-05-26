@@ -5,7 +5,7 @@ from django.contrib import auth
 
 from jobapp.models import *
 from ckeditor.widgets import CKEditorWidget
-
+from datetime import date
 
    
 

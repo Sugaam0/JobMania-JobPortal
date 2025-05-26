@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'user_visit',
     'debug_toolbar',
+    'decouple',
     
 ]
 
@@ -96,35 +97,22 @@ DATABASES = {
 }
 
 
+from decouple import config  # type: ignore
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "jobmania420@gmail.com"  # Your Gmail address
-EMAIL_HOST_PASSWORD = "vcnm skns bstj kmuw"  # Your actual Gmail password
+EMAIL_HOST_USER =  config('EMAIL_HOST_USER') # Your Gmail address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Your actual Gmail password
+
 #for debug toolbar
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
     # ...
 ]
-# CACHES
-# ------------------------------------------------------------------------------
-
-# CACHES = {
-#     "default": {
-#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#         'LOCATION': 'redis://127.0.0.1:6379',
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
-#         },
-#         "KEY_PREFIX": "config"
-#     }
-# }
-
-# Password validation
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -187,9 +175,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

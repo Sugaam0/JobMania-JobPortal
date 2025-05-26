@@ -112,7 +112,6 @@ def create_job_View(request):
 
     user = get_object_or_404(User, id=request.user.id)
     categories = Category.objects.all()
-
     if request.method == 'POST':
 
         if form.is_valid():
@@ -145,8 +144,8 @@ def single_job_view(request, id):
     else:
         job = get_object_or_404(Job, id=id)
         cache.set(id,job , 60 * 15)
-    related_job_list = job.tags.similar_objects()
-
+    # related_job_list = job.tags.similar_objects()
+    related_job_list = Job.objects.filter(category=job.category).exclude(id=job.id)
     paginator = Paginator(related_job_list, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -515,7 +514,7 @@ def employee_list(request):
     return render(request, 'jobapp/employee_list.html', context)
 
 def blog_list_view(request):
-    blogs = Blog.objects.all()
+    blogs = Blog.objects.all().order_by('-created_at')
     return render(request, 'jobapp/blog_list.html', {'blogs': blogs})
 
 @login_required(login_url=reverse_lazy('account:login'))
