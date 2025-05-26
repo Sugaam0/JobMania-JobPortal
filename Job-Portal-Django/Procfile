@@ -1,1 +1,1 @@
-web: gunicorn job.wsgi
+web: gunicorn Job-Portal-Django.wsgi
