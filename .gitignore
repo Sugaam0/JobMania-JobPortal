@@ -12,3 +12,8 @@ __pycache__/
 
 db.json
 .env
+Procfile
+
+
+LICENSE
+runtime.txt/

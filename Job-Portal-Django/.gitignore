@@ -145,5 +145,7 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/django,virtualenv,visualstudiocode
 Procfile
-runtime.txt
+runtime.txt/
 .env
+*__init__.pyc
+db.json
